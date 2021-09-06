@@ -1,27 +1,75 @@
 extends Control
 
-enum BATTLE_STATES {
-	PLAYER, # player 1 turn
-	ENEMY, # player 2 (or AI enemy) turn
-	WIN, # player 1 wins
-	LOSE, # player 2 wins
+onready var player = $player_controller
+onready var AI = $AI
+onready var battle_calculator = $battle_calculator
+var player_moved := false
+var AI_moved := false
+var player_team
+
+enum BATTLE_PHASE {
+	BEGIN, # wait for match to begin
+	DECISION, # wait for player commands
+	COMBAT, # execute commands
+	END, # end battle
 }
-var current_state = BATTLE_STATES.PLAYER
+var current_phase = BATTLE_PHASE.DECISION
 
 func _ready() -> void:
-	_handle_states(BATTLE_STATES.PLAYER)
+	_connect_signals()
+	_handle_phase(BATTLE_PHASE.DECISION)
 
-func _handle_states(new_state) -> void:
-	current_state = new_state
-	match current_state:
-		BATTLE_STATES.PLAYER:
-			pass
-		BATTLE_STATES.ENEMY:
-			pass
-		BATTLE_STATES.WIN:
-			pass
-		BATTLE_STATES.LOSE:
-			pass
+func _connect_signals() -> void:
+	if player.connect("player_decision", self, "_on_player_decision") != OK:
+		push_error("player signal connect fail")
+	if AI.connect("AI_decision", self, "_on_AI_decision") != OK:
+		push_error("AI signal connect fail")
 
-func _handle_player_turn() -> void:
-	pass
+func _handle_phase(new_phase) -> void:
+	current_phase = new_phase
+	match current_phase:
+		BATTLE_PHASE.BEGIN:
+			pass # load in data, begin battle
+		BATTLE_PHASE.DECISION:
+			player_moved = false
+			AI_moved = false
+		BATTLE_PHASE.COMBAT:
+			_execute_combat() # play combat animation
+		BATTLE_PHASE.END:
+			pass # go to win or lose animation
+
+func _on_player_decision(action, choice) -> void:
+	battle_calculator.player_action[0] = action
+	battle_calculator.player_action[1] = choice
+	match action:
+		0: # attack
+			print("player chose attack: ", choice)
+		1: # switch
+			print("player chose switch: ", choice)
+		2: # item
+			print("player chose item: ", choice)
+		3: # surrender
+			print("player surrendered: ", choice)
+	player_moved = true
+	if AI_moved:
+		_handle_phase(BATTLE_PHASE.COMBAT)
+
+func _on_AI_decision(action, choice) -> void:
+	battle_calculator.AI_action[0] = action
+	battle_calculator.AI_action[1] = choice
+	match action:
+		0: # attack
+			print("AI chose attack: ", choice)
+		1: # switch
+			print("AI chose switch: ", choice)
+		2: # item
+			print("AI chose item: ", choice)
+		3: # surrender
+			print("AI surrendered: ", choice)
+	AI_moved = true
+	if player_moved:
+		_handle_phase(BATTLE_PHASE.COMBAT)
+
+func _execute_combat() -> void:
+	print("player chose action ", battle_calculator.player_action[0], " with choice ", battle_calculator.player_action[1])
+	print("AI chose action ", battle_calculator.AI_action[0], " with choice ", battle_calculator.AI_action[1])
