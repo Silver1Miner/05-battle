@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Node2D",
+"class": "Battler",
+"language": "GDScript",
+"path": "res://src/actors/battler.gd"
+} ]
+_global_script_class_icons={
+"Battler": ""
+}
+
 [application]
 
 config/name="Battle Ranger"

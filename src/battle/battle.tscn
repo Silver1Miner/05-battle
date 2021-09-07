@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/ui/interface.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/battle/battle.gd" type="Script" id=2]
 [ext_resource path="res://src/player/player_controller.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/ai/AI.tscn" type="PackedScene" id=4]
 [ext_resource path="res://src/battle/battle_calculator.tscn" type="PackedScene" id=5]
+[ext_resource path="res://src/actors/battler.tscn" type="PackedScene" id=6]
 
 [node name="battle" type="Control"]
 anchor_right = 1.0
@@ -28,6 +29,8 @@ anchor_bottom = 1.0
 
 [node name="actors" type="Node2D" parent="."]
 
-[node name="player_actor" type="Node2D" parent="actors"]
+[node name="player_team" type="Node2D" parent="actors"]
 
-[node name="ai_actor" type="Node2D" parent="actors"]
+[node name="battler" parent="actors/player_team" instance=ExtResource( 6 )]
+
+[node name="ai_team" type="Node2D" parent="actors"]

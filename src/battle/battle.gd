@@ -5,7 +5,6 @@ onready var AI = $AI
 onready var battle_calculator = $battle_calculator
 var player_moved := false
 var AI_moved := false
-var player_team
 
 enum BATTLE_PHASE {
 	BEGIN, # wait for match to begin
@@ -17,7 +16,7 @@ var current_phase = BATTLE_PHASE.DECISION
 
 func _ready() -> void:
 	_connect_signals()
-	_handle_phase(BATTLE_PHASE.DECISION)
+	_handle_phase(BATTLE_PHASE.BEGIN)
 
 func _connect_signals() -> void:
 	if player.connect("player_decision", self, "_on_player_decision") != OK:
@@ -50,6 +49,8 @@ func _on_player_decision(action, choice) -> void:
 			print("player chose item: ", choice)
 		3: # surrender
 			print("player surrendered: ", choice)
+			_handle_phase(BATTLE_PHASE.END)
+			return
 	player_moved = true
 	if AI_moved:
 		_handle_phase(BATTLE_PHASE.COMBAT)
@@ -66,6 +67,8 @@ func _on_AI_decision(action, choice) -> void:
 			print("AI chose item: ", choice)
 		3: # surrender
 			print("AI surrendered: ", choice)
+			_handle_phase(BATTLE_PHASE.END)
+			return
 	AI_moved = true
 	if player_moved:
 		_handle_phase(BATTLE_PHASE.COMBAT)
