@@ -2,6 +2,9 @@ extends Node2D
 class_name Battler
 
 signal died
+enum SIDES {LEFT, RIGHT}
+var current_side = SIDES.LEFT
+
 var is_alive := true
 export var target_group := "infantry"
 var max_hp := 10
@@ -16,5 +19,26 @@ func _ready() -> void:
 
 func set_health(new_value) -> void:
 	health = clamp(new_value, 0, max_health)
+	var old_hp = hp
+	hp = int(health/10)
+	play_damage_animation(old_hp, hp)
 	if health == 0:
 		emit_signal("died")
+
+func set_ammo(new_value) -> void:
+	ammo = clamp(new_value, 0, max_ammo)
+
+func set_sprite_to_health() -> void:
+	if hp > 8:
+		pass
+	elif hp > 6:
+		$Sprite1.visible = false
+	elif hp > 4:
+		$Sprite2.visible = false
+	elif hp > 2:
+		$Sprite3.visible = false
+	elif hp > 0:
+		$Sprite4.visible = false
+
+func play_damage_animation(_start_hp, _end_hp):
+	pass
