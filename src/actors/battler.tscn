@@ -1,14 +1,15 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://src/actors/battler.gd" type="Script" id=1]
-[ext_resource path="res://assets/battlers/infantry-red-Sheet.png" type="Texture" id=2]
+[ext_resource path="res://assets/battlers/infantry/infantry-red-Sheet.png" type="Texture" id=2]
 [ext_resource path="res://src/actors/actors_enter_scene.tres" type="Animation" id=3]
 [ext_resource path="res://src/actors/actors_exit_scene.tres" type="Animation" id=4]
 [ext_resource path="res://src/actors/actors_fire_mg.tres" type="Animation" id=5]
-[ext_resource path="res://assets/battlers/infantry-prp-Sheet.png" type="Texture" id=6]
-[ext_resource path="res://assets/battlers/infantry-grn-Sheet.png" type="Texture" id=7]
-[ext_resource path="res://assets/battlers/infantry-ylw-Sheet.png" type="Texture" id=8]
-[ext_resource path="res://assets/battlers/infantry-blu-Sheet.png" type="Texture" id=9]
+[ext_resource path="res://assets/battlers/infantry/infantry-prp-Sheet.png" type="Texture" id=6]
+[ext_resource path="res://assets/battlers/infantry/infantry-grn-Sheet.png" type="Texture" id=7]
+[ext_resource path="res://assets/battlers/scout/scoutcar-ylw-Sheet.png" type="Texture" id=8]
+[ext_resource path="res://assets/battlers/antitank/antitank-blu-Sheet.png" type="Texture" id=9]
+[ext_resource path="res://src/actors/actors_fire_prim.tres" type="Animation" id=10]
 
 [node name="battler" type="Node2D"]
 script = ExtResource( 1 )
@@ -17,33 +18,34 @@ script = ExtResource( 1 )
 anims/enter_scene = ExtResource( 3 )
 anims/exit_scene = ExtResource( 4 )
 anims/fire_mg = ExtResource( 5 )
+anims/fire_prim = ExtResource( 10 )
 
 [node name="Sprite1" type="Sprite" parent="."]
 position = Vector2( 470, 100 )
 texture = ExtResource( 9 )
-hframes = 7
-frame = 5
+hframes = 10
+frame = 4
 
 [node name="Sprite2" type="Sprite" parent="."]
 position = Vector2( 440, 125 )
 texture = ExtResource( 8 )
-hframes = 7
-frame = 5
+hframes = 10
+frame = 4
 
 [node name="Sprite3" type="Sprite" parent="."]
 position = Vector2( 470, 150 )
 texture = ExtResource( 2 )
-hframes = 7
-frame = 5
+hframes = 10
+frame = 4
 
 [node name="Sprite4" type="Sprite" parent="."]
 position = Vector2( 440, 175 )
 texture = ExtResource( 6 )
-hframes = 7
+hframes = 10
 frame = 5
 
 [node name="Sprite5" type="Sprite" parent="."]
 position = Vector2( 470, 200 )
 texture = ExtResource( 7 )
-hframes = 7
-frame = 5
+hframes = 10
+frame = 4

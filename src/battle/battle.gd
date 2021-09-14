@@ -76,3 +76,14 @@ func _on_AI_decision(action, choice) -> void:
 func _execute_combat() -> void:
 	print("player chose action ", battle_calculator.player_action[0], " with choice ", battle_calculator.player_action[1])
 	print("AI chose action ", battle_calculator.AI_action[0], " with choice ", battle_calculator.AI_action[1])
+
+# DEBUGGING
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_home"):
+		$actors/player_team/battler.play_animation_enter()
+		yield($actors/player_team/battler.animation_player, "animation_finished")
+		$actors/player_team/battler.play_animation_fire_primary()
+		yield($actors/player_team/battler.animation_player, "animation_finished")
+		$actors/player_team/battler.play_animation_fire_secondary()
+		yield($actors/player_team/battler.animation_player, "animation_finished")
+		$actors/player_team/battler.play_animation_exit()

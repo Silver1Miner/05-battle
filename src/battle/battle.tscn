@@ -32,5 +32,6 @@ anchor_bottom = 1.0
 [node name="player_team" type="Node2D" parent="actors"]
 
 [node name="battler" parent="actors/player_team" instance=ExtResource( 6 )]
+position = Vector2( 0, 50 )
 
 [node name="ai_team" type="Node2D" parent="actors"]
