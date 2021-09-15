@@ -1,14 +1,14 @@
 [gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://src/actors/battler.gd" type="Script" id=1]
-[ext_resource path="res://assets/battlers/infantry/infantry-red-Sheet.png" type="Texture" id=2]
+[ext_resource path="res://assets/battlers/tank/tank-red-Sheet.png" type="Texture" id=2]
 [ext_resource path="res://src/actors/actors_enter_scene.tres" type="Animation" id=3]
 [ext_resource path="res://src/actors/actors_exit_scene.tres" type="Animation" id=4]
 [ext_resource path="res://src/actors/actors_fire_mg.tres" type="Animation" id=5]
 [ext_resource path="res://assets/battlers/infantry/infantry-prp-Sheet.png" type="Texture" id=6]
-[ext_resource path="res://assets/battlers/infantry/infantry-grn-Sheet.png" type="Texture" id=7]
-[ext_resource path="res://assets/battlers/scout/scoutcar-ylw-Sheet.png" type="Texture" id=8]
-[ext_resource path="res://assets/battlers/antitank/antitank-blu-Sheet.png" type="Texture" id=9]
+[ext_resource path="res://assets/battlers/scout/scoutcar-grn-Sheet.png" type="Texture" id=7]
+[ext_resource path="res://assets/battlers/artillery/artillery-blu-Sheet.png" type="Texture" id=8]
+[ext_resource path="res://assets/battlers/antitank/antitank-ylw-Sheet.png" type="Texture" id=9]
 [ext_resource path="res://src/actors/actors_fire_prim.tres" type="Animation" id=10]
 
 [node name="battler" type="Node2D"]
@@ -22,13 +22,13 @@ anims/fire_prim = ExtResource( 10 )
 
 [node name="Sprite1" type="Sprite" parent="."]
 position = Vector2( 470, 100 )
-texture = ExtResource( 9 )
+texture = ExtResource( 8 )
 hframes = 10
 frame = 4
 
 [node name="Sprite2" type="Sprite" parent="."]
 position = Vector2( 440, 125 )
-texture = ExtResource( 8 )
+texture = ExtResource( 9 )
 hframes = 10
 frame = 4
 
