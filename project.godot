@@ -10,11 +10,17 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node2D",
+"class": "Actor",
+"language": "GDScript",
+"path": "res://src/actors/actor.gd"
+}, {
+"base": "Node2D",
 "class": "Battler",
 "language": "GDScript",
-"path": "res://src/actors/battler.gd"
+"path": "res://src/actors/battle_demo/battler.gd"
 } ]
 _global_script_class_icons={
+"Actor": "",
 "Battler": ""
 }
 

@@ -78,12 +78,22 @@ func _execute_combat() -> void:
 	print("AI chose action ", battle_calculator.AI_action[0], " with choice ", battle_calculator.AI_action[1])
 
 # DEBUGGING
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_home"):
-		$actors/player_team/battler.play_animation_enter()
-		yield($actors/player_team/battler.animation_player, "animation_finished")
-		$actors/player_team/battler.play_animation_fire_primary()
-		yield($actors/player_team/battler.animation_player, "animation_finished")
-		$actors/player_team/battler.play_animation_fire_secondary()
-		yield($actors/player_team/battler.animation_player, "animation_finished")
-		$actors/player_team/battler.play_animation_exit()
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_accept"):
+		print("play")
+		$actors/player_team/actor.play_animation_enter()
+		yield($actors/player_team/actor.animation_player, "animation_finished")
+		$actors/player_team/actor.play_animation_fire_primary()
+		yield($actors/player_team/actor.animation_player, "animation_finished")
+		$actors/player_team/actor.play_animation_fire_secondary()
+		yield($actors/player_team/actor.animation_player, "animation_finished")
+		$actors/player_team/actor.play_animation_exit()
+		yield($actors/player_team/actor.animation_player, "animation_finished")
+		$actors/ai_team/actor.play_animation_enter()
+		yield($actors/player_team/actor.animation_player, "animation_finished")
+		$actors/ai_team/actor.play_animation_fire_primary()
+		yield($actors/player_team/actor.animation_player, "animation_finished")
+		$actors/ai_team/actor.play_animation_fire_secondary()
+		yield($actors/player_team/actor.animation_player, "animation_finished")
+		$actors/ai_team/actor.play_animation_exit()
+		yield($actors/player_team/actor.animation_player, "animation_finished")
