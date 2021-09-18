@@ -5,8 +5,7 @@ enum SELECT_MODES {
 	SELECT,
 	ATTACK, # ui_accept
 	SWITCH, # ui_cancel
-	ITEM, # ui_select
-	SURRENDER # ui_home
+	SURRENDER, # ui_select
 }
 signal player_decision(action, choice)
 # action: attack, switch, item, surrender
@@ -27,8 +26,6 @@ func _handle_selection(new_mode) -> void:
 			pass
 		SELECT_MODES.SWITCH:
 			pass
-		SELECT_MODES.ITEM:
-			pass
 		SELECT_MODES.SURRENDER:
 			pass
 
@@ -41,8 +38,6 @@ func _unhandled_input(event: InputEvent) -> void:
 				emit_signal("player_decision", 0, current_select_index)
 			SELECT_MODES.SWITCH:
 				emit_signal("player_decision", 1, current_select_index)
-			SELECT_MODES.ITEM:
-				emit_signal("player_decision", 2, current_select_index)
 			SELECT_MODES.SURRENDER:
 				emit_signal("player_decision", 3, 0)
 	elif event.is_action_pressed("ui_cancel"):
@@ -55,3 +50,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				_handle_selection(SELECT_MODES.SELECT)
 			SELECT_MODES.SURRENDER:
 				_handle_selection(SELECT_MODES.SELECT)
+	elif event.is_action_pressed("ui_home"):
+		match current_mode:
+			SELECT_MODES.SELECT:
+				_handle_selection(SELECT_MODES.SURRENDER)

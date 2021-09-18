@@ -19,7 +19,7 @@ func _ready() -> void:
 	if skip_button.connect("pressed", self, "_on_skip_pressed") != OK:
 		push_error("skip button connect fail")
 	#visible = false
-	initialize(test_dialogue)
+	#initialize(test_dialogue)
 
 var test_dialogue = {
 	"0": {
