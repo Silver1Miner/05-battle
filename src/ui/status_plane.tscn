@@ -1,12 +1,20 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/ui/panel_blue.png" type="Texture" id=1]
+[ext_resource path="res://src/ui/status_plane.gd" type="Script" id=2]
+[ext_resource path="res://assets/ui/progress-bar-fill.png" type="Texture" id=3]
+[ext_resource path="res://assets/ui/progress-bar-over.png" type="Texture" id=4]
+[ext_resource path="res://assets/ui/progress-bar-under.png" type="Texture" id=5]
 
 [node name="status_plane" type="HBoxContainer"]
 margin_right = 644.0
 margin_bottom = 80.0
 rect_min_size = Vector2( 320, 40 )
 custom_constants/separation = 0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="player_side" type="HBoxContainer" parent="."]
 margin_right = 320.0
@@ -34,12 +42,59 @@ patch_margin_top = 20
 patch_margin_right = 19
 patch_margin_bottom = 19
 
+[node name="display" type="VBoxContainer" parent="player_side/status"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -100.0
+margin_top = -37.0
+margin_right = 100.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 200, 70 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="name" type="Label" parent="player_side/status/display"]
+margin_right = 200.0
+margin_bottom = 14.0
+text = "Prepare for Battle"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="status" type="Label" parent="player_side/status/display"]
+margin_top = 18.0
+margin_right = 200.0
+margin_bottom = 32.0
+text = "Ready"
+align = 1
+
+[node name="hp_bar" type="TextureProgress" parent="player_side/status/display"]
+margin_top = 36.0
+margin_right = 200.0
+margin_bottom = 56.0
+rect_min_size = Vector2( 0, 20 )
+texture_under = ExtResource( 5 )
+texture_over = ExtResource( 4 )
+texture_progress = ExtResource( 3 )
+nine_patch_stretch = true
+
+[node name="hp_values" type="Label" parent="player_side/status/display"]
+margin_top = 60.0
+margin_right = 200.0
+margin_bottom = 74.0
+text = "0 / 0"
+align = 1
+
 [node name="enemy_side" type="HBoxContainer" parent="."]
 margin_left = 320.0
-margin_right = 644.0
+margin_right = 640.0
 margin_bottom = 80.0
+custom_constants/separation = 0
 
-[node name="options" type="NinePatchRect" parent="enemy_side"]
+[node name="status" type="NinePatchRect" parent="enemy_side"]
 margin_right = 240.0
 margin_bottom = 80.0
 rect_min_size = Vector2( 240, 40 )
@@ -52,9 +107,56 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="status" type="NinePatchRect" parent="enemy_side"]
-margin_left = 244.0
-margin_right = 324.0
+[node name="display" type="VBoxContainer" parent="enemy_side/status"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -100.0
+margin_top = -37.0
+margin_right = 100.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 200, 70 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="name" type="Label" parent="enemy_side/status/display"]
+margin_right = 200.0
+margin_bottom = 14.0
+text = "Prepare for Battle"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="status" type="Label" parent="enemy_side/status/display"]
+margin_top = 18.0
+margin_right = 200.0
+margin_bottom = 32.0
+text = "Ready"
+align = 1
+
+[node name="hp_bar" type="TextureProgress" parent="enemy_side/status/display"]
+margin_top = 36.0
+margin_right = 200.0
+margin_bottom = 56.0
+rect_min_size = Vector2( 0, 20 )
+texture_under = ExtResource( 5 )
+texture_over = ExtResource( 4 )
+texture_progress = ExtResource( 3 )
+nine_patch_stretch = true
+
+[node name="hp_values" type="Label" parent="enemy_side/status/display"]
+margin_top = 60.0
+margin_right = 200.0
+margin_bottom = 74.0
+text = "0 / 0"
+align = 1
+
+[node name="panel" type="NinePatchRect" parent="enemy_side"]
+margin_left = 240.0
+margin_right = 320.0
 margin_bottom = 80.0
 rect_min_size = Vector2( 80, 80 )
 texture = ExtResource( 1 )

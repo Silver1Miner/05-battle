@@ -24,3 +24,6 @@ func play_animation_fire_primary() -> void:
 
 func play_animation_fire_secondary() -> void:
 	animation_player.play("fire_secondary")
+
+func play_animation_fire_tertiary() -> void:
+	animation_player.play("fire_tertiary")

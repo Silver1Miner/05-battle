@@ -6,6 +6,14 @@ onready var attack_menu = $player_side/status/attack_menu
 onready var switch_menu = $player_side/status/switch_menu
 onready var surrender_menu = $player_side/status/surrender_menu
 
+func update_attack_choices(names: Array) -> void:
+	for i in range(3):
+		attack_menu.get_child(i).text = names[i]
+
+func update_switch_choices(names: Array) -> void:
+	for i in range(3):
+		switch_menu.get_child(i).text = names[i]
+
 func _on_attack_pressed() -> void:
 	menu.visible = false
 	attack_menu.visible = true

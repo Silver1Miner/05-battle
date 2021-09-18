@@ -197,10 +197,24 @@ margin_bottom = 40.0
 rect_min_size = Vector2( 120, 40 )
 text = "Don't give up!"
 
+[node name="blocker" type="NinePatchRect" parent="player_side/status"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 240, 80 )
+texture = ExtResource( 1 )
+patch_margin_left = 21
+patch_margin_top = 20
+patch_margin_right = 19
+patch_margin_bottom = 19
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="enemy_side" type="HBoxContainer" parent="."]
 margin_left = 320.0
-margin_right = 644.0
+margin_right = 640.0
 margin_bottom = 80.0
+custom_constants/separation = 0
 
 [node name="options" type="NinePatchRect" parent="enemy_side"]
 margin_right = 240.0
@@ -216,8 +230,8 @@ __meta__ = {
 }
 
 [node name="status" type="NinePatchRect" parent="enemy_side"]
-margin_left = 244.0
-margin_right = 324.0
+margin_left = 240.0
+margin_right = 320.0
 margin_bottom = 80.0
 rect_min_size = Vector2( 80, 80 )
 texture = ExtResource( 1 )

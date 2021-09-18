@@ -8,35 +8,56 @@ var current_active := false
 
 var units := [
 {
+	"name": "Red Rocket Man",
 	"skin": "res://assets/battlers/antitank/antitank-red-Sheet.png",
+	"status": "OK",
 	"hp": 20,
-	"max_hp": 22,
+	"max_hp": 24,
 	"attack": 10,
 	"defense": 10,
 	"speed": 10,
-	"moves": [0, 0, 0, 0],
-	"pp": [10, 10, 10, 10]
+	"moves": ["Flame Cannon", "Pepper Spray", "Agility"],
+	"pp": [10, 10, 10]
 },
 {
+	"name": "Blu Tankie",
 	"skin": "res://assets/battlers/tank/tank-blu-Sheet.png",
-	"hp": 20,
-	"max_hp": 22,
+	"status": "Fainted",
+	"hp": 22,
+	"max_hp": 30,
 	"attack": 10,
 	"defense": 10,
 	"speed": 10,
-	"moves": [0, 0, 0, 0],
-	"pp": [10, 10, 10, 10]
+	"moves": ["Hydro Blast", "Gun Harass", "Pump Up"],
+	"pp": [10, 10, 10]
 }
 ,{
+	"name": "Ylw Cannon",
 	"skin": "res://assets/battlers/artillery/artillery-ylw-Sheet.png",
+	"status": "OK",
 	"hp": 20,
-	"max_hp": 22,
+	"max_hp": 20,
 	"attack": 10,
 	"defense": 10,
 	"speed": 10,
-	"moves": [0, 0, 0, 0],
-	"pp": [10, 10, 10, 10]
+	"moves": ["Mud Blast", "Dust Puff", "Lock On"],
+	"pp": [10, 10, 10]
 }]
+
+func get_team_names() -> Array:
+	return [units[0]["name"], units[1]["name"], units[2]["name"]]
+
+func get_unit_name() -> String:
+	return units[current_unit]["name"]
+
+func get_unit_status() -> String:
+	return units[current_unit]["status"]
+
+func get_unit_moves() -> Array:
+	return units[current_unit]["moves"]
+
+func get_unit_hp_values() -> Vector2:
+	return Vector2(units[current_unit]["hp"], units[current_unit]["max_hp"])
 
 func play_intro() -> void:
 	current_active = true
@@ -56,23 +77,27 @@ func switch_units(choice: int) -> void:
 	emit_signal("animation_finished")
 	current_active = true
 
-func attack(choice: int, style: int) -> void:
-	if units[current_unit]["pp"][choice] <= 0:
-		print("unit is out of pp")
-		return
-	units[current_unit]["pp"][choice] -= 1
-	match style:
+func attack(choice: int) -> void:
+	#if units[current_unit]["pp"][choice] <= 0:
+	#	print("unit is out of pp")
+	#	return
+	#units[current_unit]["pp"][choice] -= 1
+	match choice:
 		0:
 			actor.play_animation_fire_primary()
 		1:
 			actor.play_animation_fire_secondary()
+		2:
+			actor.play_animation_fire_tertiary()
 	yield(actor.animation_player, "animation_finished")
 	emit_signal("animation_finished")
 
 func take_damage(value) -> void:
 	var old_hp = units[current_unit]["hp"]
 	var new_value = int(clamp(0, units[current_unit]["max_hp"], old_hp - value))
+	units[current_unit]["hp"] = new_value
 	if new_value == 0:
+		units[current_unit]["status"] = "Fainted"
 		actor.play_destruction_animation()
 		yield(actor.animation_player, "animation_finished")
 		current_active = false
