@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://assets/battlers/antitank/antitank-red-Sheet.png" type="Texture" id=1]
+[ext_resource path="res://assets/battlers/artillery/artillery-red-Sheet.png" type="Texture" id=1]
 [ext_resource path="res://src/actors/enter_scene.tres" type="Animation" id=2]
 [ext_resource path="res://src/actors/exit_scene.tres" type="Animation" id=3]
 [ext_resource path="res://src/actors/fire_primary.tres" type="Animation" id=4]

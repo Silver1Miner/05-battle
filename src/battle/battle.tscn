@@ -5,7 +5,7 @@
 [ext_resource path="res://src/player/player_controller.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/ai/AI.tscn" type="PackedScene" id=4]
 [ext_resource path="res://src/battle/battle_calculator.tscn" type="PackedScene" id=5]
-[ext_resource path="res://src/actors/actor.tscn" type="PackedScene" id=6]
+[ext_resource path="res://src/teams/team.tscn" type="PackedScene" id=6]
 
 [node name="battle" type="Control"]
 anchor_right = 1.0
@@ -30,15 +30,12 @@ __meta__ = {
 
 [node name="battle_calculator" parent="." instance=ExtResource( 5 )]
 
-[node name="actors" type="Node2D" parent="."]
+[node name="team1" parent="." instance=ExtResource( 6 )]
 
-[node name="player_team" type="Node2D" parent="actors"]
+[node name="team2" parent="." instance=ExtResource( 6 )]
+scale = Vector2( -1, 1 )
 
-[node name="actor" parent="actors/player_team" instance=ExtResource( 6 )]
-position = Vector2( 462.902, 191.074 )
-
-[node name="ai_team" type="Node2D" parent="actors"]
-
-[node name="actor" parent="actors/ai_team" instance=ExtResource( 6 )]
-position = Vector2( 181.949, 189.084 )
-flip = true
+[editable path="team1"]
+[editable path="team1/actor"]
+[editable path="team2"]
+[editable path="team2/actor"]

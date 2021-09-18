@@ -1,28 +1,21 @@
 extends Node
 
-var player_action := [0, 0]
-# action (attack, switch, item), choice (which attack/switch/item)
-var AI_action := [0, 0]
+func calculate_stab(user, move) -> float:
+	if user == move:
+		return 1.5
+	return 1.0
 
-var player_team := {
-	0: {},
-	1: {},
-	2: {}
-}
-var player_current_active := 0
-var ai_team := {
-	0: {},
-	1: {},
-	2: {}
-}
-var ai_current_active := 0
+# 0 red, 1 yellow, 2 purple, 3 blue, 4 green
+var type_matcher := [
+	[1.0, 0.5, 2.0, 1.0, 1.0],
+	[1.0, 1.0, 0.5, 2.0, 1.0],
+	[1.0, 1.0, 1.0, 0.5, 2.0],
+	[2.0, 1.0, 1.0, 1.0, 0.5],
+	[0.5, 2.0, 1.0, 1.0, 1.0]
+]
+func calculate_type(attacker, defender) -> float:
+	return type_matcher[attacker][defender]
 
-func _ready() -> void:
-	pass
-
-func execute_actions() -> void:
-	if player_action[0] == 1: # switch
-		player_current_active = player_action[1]
-	if AI_action[0] == 1:
-		ai_current_active = AI_action[1]
-
+func calculate_damage(power, a, d, stab, type) -> float:
+	var base_damage = (4.0 * power * (a/d))/50.0 + 2.0
+	return base_damage * stab * type
