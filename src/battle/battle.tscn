@@ -28,9 +28,9 @@ __meta__ = {
 [node name="AI" parent="." instance=ExtResource( 4 )]
 
 [node name="team1" parent="." instance=ExtResource( 6 )]
+scale = Vector2( -1, 1 )
 
 [node name="team2" parent="." instance=ExtResource( 6 )]
-scale = Vector2( -1, 1 )
 
 [editable path="team1"]
 [editable path="team1/actor"]

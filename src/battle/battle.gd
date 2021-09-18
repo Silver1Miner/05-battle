@@ -5,6 +5,10 @@ onready var AI = $AI
 onready var battle_calculator = $battle_calculator
 var player_moved := false
 var AI_moved := false
+onready var team1 = $team1
+onready var team2 = $team2
+var player_choice = [0, 0] # action, choice
+var AI_choice = [0, 0]
 
 enum BATTLE_PHASE {
 	BEGIN, # wait for match to begin
@@ -28,7 +32,7 @@ func _handle_phase(new_phase) -> void:
 	current_phase = new_phase
 	match current_phase:
 		BATTLE_PHASE.BEGIN:
-			pass # load in data, begin battle
+			_play_intro_phase()
 		BATTLE_PHASE.DECISION:
 			player_moved = false
 			AI_moved = false
@@ -37,7 +41,15 @@ func _handle_phase(new_phase) -> void:
 		BATTLE_PHASE.END:
 			pass # go to win or lose animation
 
+func _play_intro_phase() -> void:
+	team1.play_intro()
+	yield(team1, "animation_finished")
+	team2.play_intro()
+	yield(team2, "animation_finished")
+
 func _on_player_decision(action, choice) -> void:
+	player_choice[0] = action
+	player_choice[1] = choice
 	match action:
 		0: # yield
 			print("player surrendered: ", choice)
@@ -48,10 +60,13 @@ func _on_player_decision(action, choice) -> void:
 		2: # switch
 			print("player chose switch: ", choice)
 	player_moved = true
-	if AI_moved:
-		_handle_phase(BATTLE_PHASE.COMBAT)
+	#if AI_moved:
+	#	_handle_phase(BATTLE_PHASE.COMBAT)
+	_handle_phase(BATTLE_PHASE.COMBAT) # debugging
 
 func _on_AI_decision(action, choice) -> void:
+	AI_choice[0] = action
+	AI_choice[1] = choice
 	match action:
 		0: # yield
 			print("AI surrendered: ", choice)
@@ -66,7 +81,9 @@ func _on_AI_decision(action, choice) -> void:
 		_handle_phase(BATTLE_PHASE.COMBAT)
 
 func _execute_combat() -> void:
-	pass
+	# TODO: implement priority checks and AI side
+	if player_choice[0] == 2: # switch
+		team1.switch_units(player_choice[1])
 
 # DEBUGGING
 func _input(event: InputEvent) -> void:
