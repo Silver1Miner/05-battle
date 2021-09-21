@@ -210,6 +210,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="ColorRect" type="ColorRect" parent="player_side/status/blocker"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.470588 )
+
+[node name="battle_feed" type="RichTextLabel" parent="player_side/status/blocker/ColorRect"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -115.0
+margin_top = -35.0
+margin_right = 115.0
+margin_bottom = 35.0
+text = "Placeholder"
+
 [node name="enemy_side" type="HBoxContainer" parent="."]
 margin_left = 320.0
 margin_right = 640.0
@@ -228,6 +244,35 @@ patch_margin_bottom = 19
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="blocker" type="NinePatchRect" parent="enemy_side/options"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 240, 80 )
+texture = ExtResource( 1 )
+patch_margin_left = 21
+patch_margin_top = 20
+patch_margin_right = 19
+patch_margin_bottom = 19
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="enemy_side/options/blocker"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.470588 )
+
+[node name="battle_feed" type="RichTextLabel" parent="enemy_side/options/blocker/ColorRect"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -115.0
+margin_top = -35.0
+margin_right = 115.0
+margin_bottom = 35.0
+text = "Placeholder"
 
 [node name="status" type="NinePatchRect" parent="enemy_side"]
 margin_left = 240.0

@@ -92,9 +92,9 @@ func attack(choice: int) -> void:
 	yield(actor.animation_player, "animation_finished")
 	emit_signal("animation_finished")
 
-func take_damage(value) -> void:
+func take_damage(value: float) -> void:
 	var old_hp = units[current_unit]["hp"]
-	var new_value = int(clamp(0, units[current_unit]["max_hp"], old_hp - value))
+	var new_value = int(clamp(old_hp - round(value), 0, units[current_unit]["max_hp"]))
 	units[current_unit]["hp"] = new_value
 	if new_value == 0:
 		units[current_unit]["status"] = "Fainted"

@@ -3,7 +3,8 @@ extends Control
 onready var interface = $interface
 onready var command = $interface/VBoxContainer/command_plane
 onready var display = $interface/VBoxContainer/status_plane
-onready var command_blocker = $interface/VBoxContainer/command_plane/player_side/status/blocker
+onready var player_blocker = $interface/VBoxContainer/command_plane/player_side/status/blocker
+onready var enemy_blocker = $interface/VBoxContainer/command_plane/enemy_side/options/blocker
 onready var AI = $AI
 onready var battle_calculator = $battle_calculator
 var player_moved := false
@@ -37,7 +38,8 @@ func _handle_phase(new_phase) -> void:
 		BATTLE_PHASE.BEGIN:
 			_play_intro_phase()
 		BATTLE_PHASE.DECISION:
-			command_blocker.visible = false
+			player_blocker.visible = false
+			enemy_blocker.visible = false
 			player_moved = false
 			AI_moved = false
 		BATTLE_PHASE.COMBAT:
@@ -59,39 +61,28 @@ func _play_intro_phase() -> void:
 	yield(team2, "animation_finished")
 	display.update_enemy_status(team2.get_unit_status())
 	display.update_enemy_hp(team2.get_unit_hp_values())
-	command_blocker.visible = false
+	player_blocker.visible = false
+	enemy_blocker.visible = false
 
 func _on_player_decision(action, choice) -> void:
 	# TODO: add validity check
 	player_choice[0] = action
 	player_choice[1] = choice
-	match action:
-		0: # yield
-			print("player surrendered: ", choice)
-			_handle_phase(BATTLE_PHASE.END)
-			return
-		1: # attack
-			print("player chose attack: ", choice)
-		2: # switch
-			print("player chose switch: ", choice)
+	if action == 0: # yield
+		_handle_phase(BATTLE_PHASE.END)
+		return
 	player_moved = true
 	#if AI_moved:
 	#	_handle_phase(BATTLE_PHASE.COMBAT)
-	command_blocker.visible = true
+	player_blocker.visible = true
+	AI_choice[0] = 1
+	AI_choice[1] = 2
+	enemy_blocker.visible = true
 	_handle_phase(BATTLE_PHASE.COMBAT) # debugging
 
 func _on_AI_decision(action, choice) -> void:
 	AI_choice[0] = action
 	AI_choice[1] = choice
-	match action:
-		0: # yield
-			print("AI surrendered: ", choice)
-			_handle_phase(BATTLE_PHASE.END)
-			return
-		1: # attack
-			print("AI chose switch: ", choice)
-		2: # switch
-			print("AI chose item: ", choice)
 	AI_moved = true
 	if player_moved:
 		_handle_phase(BATTLE_PHASE.COMBAT)
@@ -109,6 +100,38 @@ func _execute_combat() -> void:
 			command.update_attack_choices(team1.get_unit_moves())
 			yield(team1, "animation_finished")
 	elif player_choice[0] == 1: # attack
+		command.update_player_text_feed(team1.get_unit_name() + " used " + team1.get_unit_moves()[player_choice[1]] + "!")
 		team1.attack(player_choice[1])
 		yield(team1, "animation_finished")
+		var power = 40
+		var a = 10
+		var d = 10
+		var stab = 1
+		var type = 1
+		var battle_damage = battle_calculator.calculate_damage(power, a, d, stab, type)
+		team2.take_damage(battle_damage)
+		command.update_enemy_text_feed(team2.get_unit_name() + " took " + str(round(battle_damage)) + " damage!")
+		print("team 2 has ", team2.get_unit_hp_values(), " hp")
+		display.update_enemy_all(
+				team2.get_unit_name(),
+				team2.get_unit_status(),
+				team2.get_unit_hp_values())
+		yield(team2, "animation_finished")
+		yield(get_tree().create_timer(1.0), "timeout")
+		if team2.current_active:
+			team2.attack(AI_choice[1])
+			command.update_enemy_text_feed(team2.get_unit_name() + " used " + team2.get_unit_moves()[AI_choice[1]] + "!")
+			yield(team2, "animation_finished")
+			team1.take_damage(battle_damage)
+			command.update_player_text_feed(team1.get_unit_name() + " took " + str(round(battle_damage)) + " damage!")
+			display.update_player_all(
+				team1.get_unit_name(),
+				team1.get_unit_status(),
+				team1.get_unit_hp_values())
+			yield(team1, "animation_finished")
+			yield(get_tree().create_timer(1.0), "timeout")
+		else:
+			print("team 2 has no will to fight")
+		command.update_player_text_feed("")
+		command.update_enemy_text_feed("")
 	_handle_phase(BATTLE_PHASE.DECISION)

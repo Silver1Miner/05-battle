@@ -5,6 +5,8 @@ onready var menu = $player_side/status/menu
 onready var attack_menu = $player_side/status/attack_menu
 onready var switch_menu = $player_side/status/switch_menu
 onready var surrender_menu = $player_side/status/surrender_menu
+onready var player_text_feed = $player_side/status/blocker/ColorRect/battle_feed
+onready var enemy_text_feed = $enemy_side/options/blocker/ColorRect/battle_feed
 
 func update_attack_choices(names: Array) -> void:
 	for i in range(3):
@@ -13,6 +15,12 @@ func update_attack_choices(names: Array) -> void:
 func update_switch_choices(names: Array) -> void:
 	for i in range(3):
 		switch_menu.get_child(i).text = names[i]
+
+func update_player_text_feed(new_text: String) -> void:
+	player_text_feed.text = new_text
+
+func update_enemy_text_feed(new_text : String) -> void:
+	enemy_text_feed.text = new_text
 
 func _on_attack_pressed() -> void:
 	menu.visible = false
