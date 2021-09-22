@@ -224,7 +224,6 @@ margin_left = -115.0
 margin_top = -35.0
 margin_right = 115.0
 margin_bottom = 35.0
-text = "Placeholder"
 
 [node name="enemy_side" type="HBoxContainer" parent="."]
 margin_left = 320.0
@@ -272,7 +271,6 @@ margin_left = -115.0
 margin_top = -35.0
 margin_right = 115.0
 margin_bottom = 35.0
-text = "Placeholder"
 
 [node name="status" type="NinePatchRect" parent="enemy_side"]
 margin_left = 240.0

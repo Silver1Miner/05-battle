@@ -5,6 +5,7 @@ signal animation_finished
 onready var current_unit = 0 # 0, 1, 2
 onready var actor := $actor
 var current_active := false
+onready var remaining_units := 3
 
 var units := [
 {
@@ -22,7 +23,7 @@ var units := [
 {
 	"name": "Blu Tankie",
 	"skin": "res://assets/battlers/tank/tank-blu-Sheet.png",
-	"status": "Fainted",
+	"status": "OK",
 	"hp": 22,
 	"max_hp": 30,
 	"attack": 10,
@@ -98,6 +99,7 @@ func take_damage(value: float) -> void:
 	units[current_unit]["hp"] = new_value
 	if new_value == 0:
 		units[current_unit]["status"] = "Fainted"
+		remaining_units -= 1
 		actor.play_destruction_animation()
 		yield(actor.animation_player, "animation_finished")
 		current_active = false

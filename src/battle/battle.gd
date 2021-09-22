@@ -18,6 +18,7 @@ enum BATTLE_PHASE {
 	BEGIN, # wait for match to begin
 	DECISION, # wait for player commands
 	COMBAT, # execute commands
+	REINFORCE, # replace defeated units
 	END, # end battle
 }
 var current_phase = BATTLE_PHASE.DECISION
@@ -44,6 +45,8 @@ func _handle_phase(new_phase) -> void:
 			AI_moved = false
 		BATTLE_PHASE.COMBAT:
 			_execute_combat() # play combat animation
+		BATTLE_PHASE.REINFORCE:
+			_choose_replacements()
 		BATTLE_PHASE.END:
 			print("battle ended")
 			pass # go to win or lose animation
@@ -103,7 +106,7 @@ func _execute_combat() -> void:
 		command.update_player_text_feed(team1.get_unit_name() + " used " + team1.get_unit_moves()[player_choice[1]] + "!")
 		team1.attack(player_choice[1])
 		yield(team1, "animation_finished")
-		var power = 40
+		var power = 120
 		var a = 10
 		var d = 10
 		var stab = 1
@@ -111,7 +114,7 @@ func _execute_combat() -> void:
 		var battle_damage = battle_calculator.calculate_damage(power, a, d, stab, type)
 		team2.take_damage(battle_damage)
 		command.update_enemy_text_feed(team2.get_unit_name() + " took " + str(round(battle_damage)) + " damage!")
-		print("team 2 has ", team2.get_unit_hp_values(), " hp")
+		#print("team 2 has ", team2.get_unit_hp_values(), " hp")
 		display.update_enemy_all(
 				team2.get_unit_name(),
 				team2.get_unit_status(),
@@ -130,8 +133,37 @@ func _execute_combat() -> void:
 				team1.get_unit_hp_values())
 			yield(team1, "animation_finished")
 			yield(get_tree().create_timer(1.0), "timeout")
+			if !team1.current_active:
+				command.update_player_text_feed(team1.get_unit_name() + " was defeated!")
+				_handle_phase(BATTLE_PHASE.REINFORCE)
+				return
 		else:
-			print("team 2 has no will to fight")
+			command.update_enemy_text_feed(team2.get_unit_name() + " was defeated!")
+			yield(get_tree().create_timer(1.5), "timeout")
+			_handle_phase(BATTLE_PHASE.REINFORCE)
+			return
 		command.update_player_text_feed("")
 		command.update_enemy_text_feed("")
 	_handle_phase(BATTLE_PHASE.DECISION)
+
+func _choose_replacements() -> void:
+	if team1.remaining_units == 0:
+		 _handle_phase(BATTLE_PHASE.END)
+	if team1.current_active:
+		pass
+	else:
+		player_blocker.visible = false
+	if team2.remaining_units == 0:
+		_handle_phase(BATTLE_PHASE.END)
+	if team2.current_active:
+		pass
+	else:
+		for i in 3:
+			if team2.units[i]["status"] != "Fainted":
+				team2.switch_units(i)
+				display.update_enemy_all(
+				team2.get_unit_name(),
+				team2.get_unit_status(),
+				team2.get_unit_hp_values())
+				_handle_phase(BATTLE_PHASE.DECISION)
+				return
