@@ -55,7 +55,7 @@ func _handle_phase(new_phase) -> void:
 			pass # go to win or lose animation
 
 func _play_intro_phase() -> void:
-	command.update_switch_choices(team1.get_team_names(), team1.get_team_status())
+	command.update_switch_choices(team1.get_team_names(), team1.get_team_status(), 0)
 	command.update_attack_choices(team1.get_unit_moves())
 	display.update_player_name(team1.get_unit_name())
 	team1.play_intro()
@@ -122,7 +122,6 @@ func _execute_combat() -> void:
 			yield(get_tree().create_timer(1.0), "timeout")
 			if !team1.current_active:
 				command.update_player_text_feed(team1.get_unit_name() + " was defeated!")
-				command.disable_invalid_switch_option(team1.current_unit)
 				_handle_phase(BATTLE_PHASE.REINFORCE)
 				return
 	elif player_choice[0] == 1: # attack
@@ -158,7 +157,6 @@ func _execute_combat() -> void:
 			yield(get_tree().create_timer(1.0), "timeout")
 			if !team1.current_active:
 				command.update_player_text_feed(team1.get_unit_name() + " was defeated!")
-				command.disable_invalid_switch_option(team1.current_unit)
 				_handle_phase(BATTLE_PHASE.REINFORCE)
 				return
 		else:
@@ -168,6 +166,7 @@ func _execute_combat() -> void:
 			return
 		command.update_player_text_feed("")
 		command.update_enemy_text_feed("")
+	command.update_switch_choices(team1.get_team_names(), team1.get_team_status(), team1.current_unit)
 	_handle_phase(BATTLE_PHASE.DECISION)
 
 func _choose_replacements() -> void:

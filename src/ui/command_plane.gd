@@ -11,20 +11,18 @@ onready var enemy_text_feed = $enemy_side/options/blocker/ColorRect/battle_feed
 func set_switch_only(value: bool) -> void:
 	$player_side/status/menu/attack.disabled = value
 
-func disable_invalid_switch_option(i) -> void:
-	switch_menu.get_child(i).disabled = true
-
 func update_attack_choices(names: Array) -> void:
 	for i in range(3):
 		attack_menu.get_child(i).disabled = false
 		attack_menu.get_child(i).text = names[i]
 
-func update_switch_choices(names: Array, status: Array) -> void:
+func update_switch_choices(names: Array, status: Array, current: int) -> void:
 	for i in range(3):
 		switch_menu.get_child(i).disabled = false
 		switch_menu.get_child(i).text = names[i]
 		if status[i] == "Fainted":
 			switch_menu.get_child(i).disabled = true
+	switch_menu.get_child(current).disabled = true
 
 func update_player_text_feed(new_text: String) -> void:
 	player_text_feed.text = new_text
