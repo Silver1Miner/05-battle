@@ -19,7 +19,8 @@ enum BATTLE_PHASE {
 	DECISION, # wait for player commands
 	COMBAT, # execute commands
 	REINFORCE, # replace defeated units
-	END, # end battle
+	WIN, # end battle in victory
+	LOSE # end battle in defeat
 }
 var current_phase = BATTLE_PHASE.DECISION
 
@@ -47,12 +48,14 @@ func _handle_phase(new_phase) -> void:
 			_execute_combat() # play combat animation
 		BATTLE_PHASE.REINFORCE:
 			_choose_replacements()
-		BATTLE_PHASE.END:
-			print("battle ended")
+		BATTLE_PHASE.WIN:
+			print("won battle")
+		BATTLE_PHASE.LOSE:
+			print("lost battle")
 			pass # go to win or lose animation
 
 func _play_intro_phase() -> void:
-	command.update_switch_choices(team1.get_team_names())
+	command.update_switch_choices(team1.get_team_names(), team1.get_team_status())
 	command.update_attack_choices(team1.get_unit_moves())
 	display.update_player_name(team1.get_unit_name())
 	team1.play_intro()
@@ -92,9 +95,12 @@ func _on_AI_decision(action, choice) -> void:
 
 func _execute_combat() -> void:
 	# TODO: implement priority checks and AI side
+	command.set_switch_only(false)
 	if player_choice[0] == 2: # switch
 		if player_choice[1] != team1.current_unit and team1.units[player_choice[1]]["status"] != "Fainted":
 			team1.switch_units(player_choice[1])
+			command.update_player_text_feed("Go " + team1.get_unit_name() + "!")
+			command.update_enemy_text_feed("")
 			display.update_player_all(
 				team1.get_unit_name(),
 				team1.get_unit_status(),
@@ -102,6 +108,23 @@ func _execute_combat() -> void:
 			)
 			command.update_attack_choices(team1.get_unit_moves())
 			yield(team1, "animation_finished")
+		if team2.current_active:
+			team2.attack(AI_choice[1])
+			command.update_enemy_text_feed(team2.get_unit_name() + " used " + team2.get_unit_moves()[AI_choice[1]] + "!")
+			yield(team2, "animation_finished")
+			team1.take_damage(5)
+			command.update_player_text_feed(team1.get_unit_name() + " took " + str(5) + " damage!")
+			display.update_player_all(
+				team1.get_unit_name(),
+				team1.get_unit_status(),
+				team1.get_unit_hp_values())
+			yield(team1, "animation_finished")
+			yield(get_tree().create_timer(1.0), "timeout")
+			if !team1.current_active:
+				command.update_player_text_feed(team1.get_unit_name() + " was defeated!")
+				command.disable_invalid_switch_option(team1.current_unit)
+				_handle_phase(BATTLE_PHASE.REINFORCE)
+				return
 	elif player_choice[0] == 1: # attack
 		command.update_player_text_feed(team1.get_unit_name() + " used " + team1.get_unit_moves()[player_choice[1]] + "!")
 		team1.attack(player_choice[1])
@@ -135,6 +158,7 @@ func _execute_combat() -> void:
 			yield(get_tree().create_timer(1.0), "timeout")
 			if !team1.current_active:
 				command.update_player_text_feed(team1.get_unit_name() + " was defeated!")
+				command.disable_invalid_switch_option(team1.current_unit)
 				_handle_phase(BATTLE_PHASE.REINFORCE)
 				return
 		else:
@@ -148,19 +172,24 @@ func _execute_combat() -> void:
 
 func _choose_replacements() -> void:
 	if team1.remaining_units == 0:
-		 _handle_phase(BATTLE_PHASE.END)
+		 _handle_phase(BATTLE_PHASE.LOSE)
 	if team1.current_active:
 		pass
 	else:
 		player_blocker.visible = false
+		command.set_switch_only(true)
 	if team2.remaining_units == 0:
-		_handle_phase(BATTLE_PHASE.END)
+		command.update_enemy_text_feed("There are no remaining battlers!")
+		yield(get_tree().create_timer(1.5), "timeout")
+		_handle_phase(BATTLE_PHASE.WIN)
 	if team2.current_active:
 		pass
 	else:
 		for i in 3:
 			if team2.units[i]["status"] != "Fainted":
 				team2.switch_units(i)
+				command.update_player_text_feed("")
+				command.update_enemy_text_feed("Enemy sent out " + team2.get_unit_name() + "!")
 				display.update_enemy_all(
 				team2.get_unit_name(),
 				team2.get_unit_status(),

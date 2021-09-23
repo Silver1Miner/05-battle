@@ -45,8 +45,14 @@ var units := [
 	"pp": [10, 10, 10]
 }]
 
+func load_in_team(new_team) -> void:
+	units = new_team
+
 func get_team_names() -> Array:
 	return [units[0]["name"], units[1]["name"], units[2]["name"]]
+
+func get_team_status() -> Array:
+	return [units[0]["status"],units[1]["status"],units[2]["status"]]
 
 func get_unit_name() -> String:
 	return units[current_unit]["name"]
