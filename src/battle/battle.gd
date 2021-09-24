@@ -84,7 +84,21 @@ func _on_player_decision(action, choice) -> void:
 	AI_choice[0] = 1
 	AI_choice[1] = 2
 	enemy_blocker.visible = true
-	_handle_phase(BATTLE_PHASE.COMBAT) # debugging
+	if current_phase == BATTLE_PHASE.REINFORCE:
+		team1.switch_units(player_choice[1])
+		command.update_player_text_feed("Go " + team1.get_unit_name() + "!")
+		command.update_enemy_text_feed("")
+		display.update_player_all(
+			team1.get_unit_name(),
+			team1.get_unit_status(),
+			team1.get_unit_hp_values()
+		)
+		command.update_attack_choices(team1.get_unit_moves())
+		yield(team1, "animation_finished")
+		command.set_switch_only(false)
+		_handle_phase(BATTLE_PHASE.DECISION)
+	else:
+		_handle_phase(BATTLE_PHASE.COMBAT) # debugging
 
 func _on_AI_decision(action, choice) -> void:
 	AI_choice[0] = action
@@ -128,12 +142,16 @@ func _execute_combat() -> void:
 		command.update_player_text_feed(team1.get_unit_name() + " used " + team1.get_unit_moves()[player_choice[1]] + "!")
 		team1.attack(player_choice[1])
 		yield(team1, "animation_finished")
-		var power = 120
-		var a = 10
-		var d = 10
-		var stab = 1
-		var type = 1
+		var name_move = team1.get_unit_moves()[player_choice[1]]
+		var power = 100
+		if name_move in Data.movedata:
+			power = Data.movedata[name_move]["power"]
+		var a = team1.get_unit_attack()
+		var d = team2.get_unit_defense()
+		var stab = battle_calculator.calculate_stab(team1.get_unit_type(),Data.movedata[name_move]["type"])
+		var type = battle_calculator.calculate_type(team1.get_unit_type(), team2.get_unit_type())
 		var battle_damage = battle_calculator.calculate_damage(power, a, d, stab, type)
+		battle_calculator.accuracy_check(Data.movedata[name_move]["accuracy"])
 		team2.take_damage(battle_damage)
 		command.update_enemy_text_feed(team2.get_unit_name() + " took " + str(round(battle_damage)) + " damage!")
 		#print("team 2 has ", team2.get_unit_hp_values(), " hp")

@@ -33,6 +33,11 @@ config/icon="res://icon.png"
 config/macos_native_icon="res://icon.png"
 config/windows_native_icon="res://icon.ico"
 
+[autoload]
+
+Data="*res://data/Data.tscn"
+Music="*res://src/audio/Music.tscn"
+
 [display]
 
 window/size/width=640
