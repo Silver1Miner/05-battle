@@ -13,6 +13,7 @@ onready var team1 = $team1
 onready var team2 = $team2
 var player_choice = [0, 0] # action, choice
 var AI_choice = [0, 0]
+onready var sounds = $Sounds
 
 enum BATTLE_PHASE {
 	BEGIN, # wait for match to begin
@@ -38,6 +39,8 @@ func _handle_phase(new_phase) -> void:
 	current_phase = new_phase
 	match current_phase:
 		BATTLE_PHASE.BEGIN:
+			team1.load_in_team(PlayerData.player_team)
+			team2.load_in_team(Database.enemy_team[PlayerData.current_opponent])
 			_play_intro_phase()
 		BATTLE_PHASE.DECISION:
 			player_blocker.visible = false
@@ -82,7 +85,7 @@ func _on_player_decision(action, choice) -> void:
 	#	_handle_phase(BATTLE_PHASE.COMBAT)
 	player_blocker.visible = true
 	AI_choice[0] = 1
-	AI_choice[1] = 2
+	AI_choice[1] = 1
 	enemy_blocker.visible = true
 	if current_phase == BATTLE_PHASE.REINFORCE:
 		team1.switch_units(player_choice[1])
@@ -124,15 +127,10 @@ func _execute_combat() -> void:
 			yield(team1, "animation_finished")
 		if team2.current_active:
 			team2.attack(AI_choice[1])
+			sounds.match_sound(AI_choice[1])
 			command.update_enemy_text_feed(team2.get_unit_name() + " used " + team2.get_unit_moves()[AI_choice[1]] + "!")
 			yield(team2, "animation_finished")
-			team1.take_damage(5)
-			command.update_player_text_feed(team1.get_unit_name() + " took " + str(5) + " damage!")
-			display.update_player_all(
-				team1.get_unit_name(),
-				team1.get_unit_status(),
-				team1.get_unit_hp_values())
-			yield(team1, "animation_finished")
+			_enemy_attack_damage_calculation()
 			yield(get_tree().create_timer(1.0), "timeout")
 			if !team1.current_active:
 				command.update_player_text_feed(team1.get_unit_name() + " was defeated!")
@@ -141,38 +139,17 @@ func _execute_combat() -> void:
 	elif player_choice[0] == 1: # attack
 		command.update_player_text_feed(team1.get_unit_name() + " used " + team1.get_unit_moves()[player_choice[1]] + "!")
 		team1.attack(player_choice[1])
+		sounds.match_sound(player_choice[1])
 		yield(team1, "animation_finished")
-		var name_move = team1.get_unit_moves()[player_choice[1]]
-		var power = 100
-		if name_move in Data.movedata:
-			power = Data.movedata[name_move]["power"]
-		var a = team1.get_unit_attack()
-		var d = team2.get_unit_defense()
-		var stab = battle_calculator.calculate_stab(team1.get_unit_type(),Data.movedata[name_move]["type"])
-		var type = battle_calculator.calculate_type(team1.get_unit_type(), team2.get_unit_type())
-		var battle_damage = battle_calculator.calculate_damage(power, a, d, stab, type)
-		battle_calculator.accuracy_check(Data.movedata[name_move]["accuracy"])
-		team2.take_damage(battle_damage)
-		command.update_enemy_text_feed(team2.get_unit_name() + " took " + str(round(battle_damage)) + " damage!")
-		#print("team 2 has ", team2.get_unit_hp_values(), " hp")
-		display.update_enemy_all(
-				team2.get_unit_name(),
-				team2.get_unit_status(),
-				team2.get_unit_hp_values())
-		yield(team2, "animation_finished")
-		yield(get_tree().create_timer(1.0), "timeout")
+		_player_attack_damage_calcuation()
+		yield(get_tree().create_timer(1.5), "timeout")
 		if team2.current_active:
 			team2.attack(AI_choice[1])
+			sounds.match_sound(AI_choice[1])
 			command.update_enemy_text_feed(team2.get_unit_name() + " used " + team2.get_unit_moves()[AI_choice[1]] + "!")
 			yield(team2, "animation_finished")
-			team1.take_damage(battle_damage)
-			command.update_player_text_feed(team1.get_unit_name() + " took " + str(round(battle_damage)) + " damage!")
-			display.update_player_all(
-				team1.get_unit_name(),
-				team1.get_unit_status(),
-				team1.get_unit_hp_values())
-			yield(team1, "animation_finished")
-			yield(get_tree().create_timer(1.0), "timeout")
+			_enemy_attack_damage_calculation()
+			yield(get_tree().create_timer(1.5), "timeout")
 			if !team1.current_active:
 				command.update_player_text_feed(team1.get_unit_name() + " was defeated!")
 				_handle_phase(BATTLE_PHASE.REINFORCE)
@@ -187,12 +164,56 @@ func _execute_combat() -> void:
 	command.update_switch_choices(team1.get_team_names(), team1.get_team_status(), team1.current_unit)
 	_handle_phase(BATTLE_PHASE.DECISION)
 
+func _player_attack_damage_calcuation() -> void:
+	var name_move = team1.get_unit_moves()[player_choice[1]]
+	var power = 100
+	if name_move in Database.movedata:
+		power = Database.movedata[name_move]["power"]
+	var a = team1.get_unit_attack()
+	var d = team2.get_unit_defense()
+	var stab = battle_calculator.calculate_stab(team1.get_unit_type(),Database.movedata[name_move]["type"])
+	var type = battle_calculator.calculate_type(team1.get_unit_type(), team2.get_unit_type())
+	var battle_damage = battle_calculator.calculate_damage(power, a, d, stab, type)
+	if battle_calculator.accuracy_check(Database.movedata[name_move]["accuracy"]):
+		team2.take_damage(battle_damage)
+		command.update_enemy_text_feed(team2.get_unit_name() + " took " + str(round(battle_damage)) + " damage!")
+		sounds.match_sound(3)
+	else:
+		command.update_enemy_text_feed("The attack missed!")
+	#print("team 2 has ", team2.get_unit_hp_values(), " hp")
+	display.update_enemy_all(
+		team2.get_unit_name(),
+		team2.get_unit_status(),
+		team2.get_unit_hp_values())
+
+func _enemy_attack_damage_calculation() -> void:
+	var name_move = team2.get_unit_moves()[AI_choice[1]]
+	var power = 100
+	if name_move in Database.movedata:
+		power = Database.movedata[name_move]["power"]
+	var a = team2.get_unit_attack()
+	var d = team1.get_unit_defense()
+	var stab = battle_calculator.calculate_stab(team2.get_unit_type(),Database.movedata[name_move]["type"])
+	var type = battle_calculator.calculate_type(team2.get_unit_type(), team1.get_unit_type())
+	var battle_damage = battle_calculator.calculate_damage(power, a, d, stab, type)
+	if battle_calculator.accuracy_check(Database.movedata[name_move]["accuracy"]):
+		team1.take_damage(battle_damage)
+		command.update_player_text_feed(team1.get_unit_name() + " took " + str(round(battle_damage)) + " damage!")
+		sounds.match_sound(3)
+	else:
+		command.update_enemy_text_feed("The attack missed!")
+	display.update_player_all(
+		team1.get_unit_name(),
+		team1.get_unit_status(),
+		team1.get_unit_hp_values())
+
 func _choose_replacements() -> void:
 	if team1.remaining_units == 0:
 		 _handle_phase(BATTLE_PHASE.LOSE)
 	if team1.current_active:
 		pass
 	else:
+		command.update_switch_choices(team1.get_team_names(), team1.get_team_status(), team1.current_unit)
 		player_blocker.visible = false
 		command.set_switch_only(true)
 	if team2.remaining_units == 0:
@@ -205,11 +226,15 @@ func _choose_replacements() -> void:
 		for i in 3:
 			if team2.units[i]["status"] != "Fainted":
 				team2.switch_units(i)
+				enemy_blocker.visible = true
 				command.update_player_text_feed("")
 				command.update_enemy_text_feed("Enemy sent out " + team2.get_unit_name() + "!")
 				display.update_enemy_all(
 				team2.get_unit_name(),
 				team2.get_unit_status(),
 				team2.get_unit_hp_values())
+				yield(get_tree().create_timer(1.5), "timeout")
+				command.update_enemy_text_feed("")
+				enemy_blocker.visible = false
 				_handle_phase(BATTLE_PHASE.DECISION)
 				return
