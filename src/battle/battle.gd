@@ -130,7 +130,8 @@ func _execute_combat() -> void:
 			sounds.match_sound(AI_choice[1])
 			command.update_enemy_text_feed(team2.get_unit_name() + " used " + team2.get_unit_moves()[AI_choice[1]] + "!")
 			yield(team2, "animation_finished")
-			_enemy_attack_damage_calculation()
+			var name_2 = team2.get_unit_moves()[AI_choice[1]]
+			_enemy_attack_damage_calculation(name_2)
 			yield(get_tree().create_timer(1.0), "timeout")
 			if !team1.current_active:
 				command.update_player_text_feed(team1.get_unit_name() + " was defeated!")
@@ -141,14 +142,16 @@ func _execute_combat() -> void:
 		team1.attack(player_choice[1])
 		sounds.match_sound(player_choice[1])
 		yield(team1, "animation_finished")
-		_player_attack_damage_calcuation()
+		var name_move = team1.get_unit_moves()[player_choice[1]]
+		_player_attack_damage_calcuation(name_move)
 		yield(get_tree().create_timer(1.5), "timeout")
 		if team2.current_active:
 			team2.attack(AI_choice[1])
 			sounds.match_sound(AI_choice[1])
 			command.update_enemy_text_feed(team2.get_unit_name() + " used " + team2.get_unit_moves()[AI_choice[1]] + "!")
 			yield(team2, "animation_finished")
-			_enemy_attack_damage_calculation()
+			var enemy_name_move = team2.get_unit_moves()[AI_choice[1]]
+			_enemy_attack_damage_calculation(enemy_name_move)
 			yield(get_tree().create_timer(1.5), "timeout")
 			if !team1.current_active:
 				command.update_player_text_feed(team1.get_unit_name() + " was defeated!")
@@ -164,8 +167,7 @@ func _execute_combat() -> void:
 	command.update_switch_choices(team1.get_team_names(), team1.get_team_status(), team1.current_unit)
 	_handle_phase(BATTLE_PHASE.DECISION)
 
-func _player_attack_damage_calcuation() -> void:
-	var name_move = team1.get_unit_moves()[player_choice[1]]
+func _player_attack_damage_calcuation(name_move) -> void:
 	var power = 100
 	if name_move in Database.movedata:
 		power = Database.movedata[name_move]["power"]
@@ -186,8 +188,7 @@ func _player_attack_damage_calcuation() -> void:
 		team2.get_unit_status(),
 		team2.get_unit_hp_values())
 
-func _enemy_attack_damage_calculation() -> void:
-	var name_move = team2.get_unit_moves()[AI_choice[1]]
+func _enemy_attack_damage_calculation(name_move) -> void:
 	var power = 100
 	if name_move in Database.movedata:
 		power = Database.movedata[name_move]["power"]
