@@ -26,6 +26,7 @@ enum BATTLE_PHASE {
 var current_phase = BATTLE_PHASE.DECISION
 
 func _ready() -> void:
+	$end_state_screen.visible = false
 	Music.change_track(1)
 	_connect_signals()
 	_handle_phase(BATTLE_PHASE.BEGIN)
@@ -54,11 +55,18 @@ func _handle_phase(new_phase) -> void:
 			_choose_replacements()
 		BATTLE_PHASE.WIN:
 			Music.change_track(0)
-			print("won battle")
+			$end_state_screen.visible = true
+			$end_state_screen/AnimationPlayer.play("victory")
+			yield(get_tree().create_timer(3.0), "timeout")
+			if get_tree().change_scene("res://src/menu/Main.tscn") != OK:
+				push_error("fail to return to main menu")
 		BATTLE_PHASE.LOSE:
 			Music.change_track(0)
-			print("lost battle")
-			pass # go to win or lose animation
+			$end_state_screen.visible = true
+			$end_state_screen/AnimationPlayer.play("defeat")
+			yield(get_tree().create_timer(3.0), "timeout")
+			if get_tree().change_scene("res://src/menu/Main.tscn") != OK:
+				push_error("fail to return to main menu")
 
 func _play_intro_phase() -> void:
 	command.update_switch_choices(team1.get_team_names(), team1.get_team_status(), 0)
@@ -81,7 +89,7 @@ func _on_player_decision(action, choice) -> void:
 	player_choice[0] = action
 	player_choice[1] = choice
 	if action == 0: # yield
-		_handle_phase(BATTLE_PHASE.END)
+		_handle_phase(BATTLE_PHASE.LOSE)
 		return
 	player_moved = true
 	#if AI_moved:

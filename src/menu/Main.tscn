@@ -61,3 +61,38 @@ visible = false
 
 [node name="settings_menu" parent="." instance=ExtResource( 5 )]
 visible = false
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 552.0
+margin_right = -4.0
+margin_bottom = -384.0
+color = Color( 0, 0, 0, 0.803922 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="version" type="Label" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -86.0
+margin_bottom = 18.0
+text = "v0.1.0 Alpha "
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="copyright" type="Label" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -236.0
+margin_top = -18.0
+text = "Copyright (c) 2021 Jack Anderson "
+__meta__ = {
+"_edit_use_anchors_": false
+}

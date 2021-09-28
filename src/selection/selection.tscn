@@ -65,19 +65,29 @@ fixed_icon_size = Vector2( 32, 32 )
 margin_top = 160.0
 margin_right = 644.0
 margin_bottom = 180.0
-custom_constants/separation = 120
+custom_constants/separation = 80
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer"]
+margin_bottom = 20.0
+
+[node name="reset" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 80.0
+margin_right = 198.0
+margin_bottom = 20.0
+text = "Reset Selections"
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
-margin_right = 360.0
+margin_left = 278.0
+margin_right = 378.0
 margin_bottom = 20.0
-rect_min_size = Vector2( 360, 20 )
+rect_min_size = Vector2( 100, 20 )
 text = "Roster Pool"
-align = 2
+align = 1
 valign = 1
 
 [node name="back" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 480.0
-margin_right = 614.0
+margin_left = 458.0
+margin_right = 592.0
 margin_bottom = 20.0
 text = "Back to Main Menu"
 
@@ -86,8 +96,6 @@ margin_top = 188.0
 margin_right = 644.0
 margin_bottom = 368.0
 rect_min_size = Vector2( 640, 180 )
-select_mode = 1
-allow_reselect = true
 max_columns = 5
 fixed_column_width = 5
 icon_mode = 0
