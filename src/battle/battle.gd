@@ -26,6 +26,7 @@ enum BATTLE_PHASE {
 var current_phase = BATTLE_PHASE.DECISION
 
 func _ready() -> void:
+	Music.change_track(1)
 	_connect_signals()
 	_handle_phase(BATTLE_PHASE.BEGIN)
 
@@ -52,8 +53,10 @@ func _handle_phase(new_phase) -> void:
 		BATTLE_PHASE.REINFORCE:
 			_choose_replacements()
 		BATTLE_PHASE.WIN:
+			Music.change_track(0)
 			print("won battle")
 		BATTLE_PHASE.LOSE:
+			Music.change_track(0)
 			print("lost battle")
 			pass # go to win or lose animation
 

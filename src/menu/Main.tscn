@@ -1,0 +1,63 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://src/menu/Main.gd" type="Script" id=1]
+[ext_resource path="res://assets/theme/Main.tres" type="Theme" id=2]
+[ext_resource path="res://assets/main-menu.png" type="Texture" id=3]
+[ext_resource path="res://src/menu/battle_menu.tscn" type="PackedScene" id=4]
+[ext_resource path="res://src/menu/settings_menu.tscn" type="PackedScene" id=5]
+
+[node name="Main" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 2 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 960.0
+margin_bottom = 600.0
+rect_scale = Vector2( 0.4, 0.4 )
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="menu_options" type="VBoxContainer" parent="."]
+margin_left = 70.0
+margin_top = 150.0
+margin_right = 190.0
+margin_bottom = 304.0
+custom_constants/separation = 32
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="level_select" type="Button" parent="menu_options"]
+margin_right = 120.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 120, 30 )
+text = "Battle Select"
+
+[node name="settings" type="Button" parent="menu_options"]
+margin_top = 62.0
+margin_right = 120.0
+margin_bottom = 92.0
+rect_min_size = Vector2( 120, 30 )
+text = "Settings"
+
+[node name="quit" type="Button" parent="menu_options"]
+margin_top = 124.0
+margin_right = 120.0
+margin_bottom = 154.0
+rect_min_size = Vector2( 120, 30 )
+text = "Quit"
+
+[node name="battle_menu" parent="." instance=ExtResource( 4 )]
+visible = false
+
+[node name="settings_menu" parent="." instance=ExtResource( 5 )]
+visible = false
