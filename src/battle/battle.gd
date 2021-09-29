@@ -266,7 +266,6 @@ func _enemy_attack_damage_calculation(name_move) -> void:
 						team2.defense_modifier = clamp(team2.defense_modifier + Database.movedata[name_move]["effect"],-4,4)
 					"speed":
 						team2.speed_modifier = clamp(team2.speed_modifier + Database.movedata[name_move]["effect"],-4,4)
-				command.update_player_text_feed(team1.get_unit_name() + "'s " + Database.movedata[name_move]["stat"] + " rose!")
 			command.update_enemy_text_feed(team2.get_unit_name() + "'s " + Database.movedata[name_move]["stat"] + " rose!")
 		else:
 			team1.take_damage(battle_damage)
