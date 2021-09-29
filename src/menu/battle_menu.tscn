@@ -13,44 +13,44 @@ __meta__ = {
 
 [node name="battle_select" type="VBoxContainer" parent="."]
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -31.0
-margin_top = -74.0
-margin_right = 31.0
-margin_bottom = 74.0
+margin_left = -65.0
+margin_top = 70.0
+margin_right = 65.0
+margin_bottom = 218.0
 custom_constants/separation = 12
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="battle1" type="Button" parent="battle_select"]
-margin_right = 62.0
+margin_right = 130.0
 margin_bottom = 20.0
+rect_min_size = Vector2( 130, 0 )
 text = "Battle 1"
 
 [node name="battle2" type="Button" parent="battle_select"]
 margin_top = 32.0
-margin_right = 62.0
+margin_right = 130.0
 margin_bottom = 52.0
 text = "Battle 2"
 
 [node name="battle3" type="Button" parent="battle_select"]
 margin_top = 64.0
-margin_right = 62.0
+margin_right = 130.0
 margin_bottom = 84.0
 text = "Battle 3"
 
 [node name="battle4" type="Button" parent="battle_select"]
 margin_top = 96.0
-margin_right = 62.0
+margin_right = 130.0
 margin_bottom = 116.0
 text = "Battle 4"
 
 [node name="battle5" type="Button" parent="battle_select"]
+visible = false
 margin_top = 128.0
-margin_right = 62.0
+margin_right = 130.0
 margin_bottom = 148.0
 text = "Battle 5"
 
@@ -59,10 +59,11 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -30.0
+margin_left = -45.0
 margin_top = -50.0
-margin_right = 30.0
-margin_bottom = -20.0
+margin_right = 45.0
+margin_bottom = -5.0
+rect_min_size = Vector2( 90, 45 )
 text = "Back"
 __meta__ = {
 "_edit_use_anchors_": false

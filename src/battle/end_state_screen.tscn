@@ -1,6 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
-[sub_resource type="Animation" id=2]
+[ext_resource path="res://assets/theme/Main.tres" type="Theme" id=1]
+
+[sub_resource type="Animation" id=1]
 resource_name = "defeat"
 length = 3.0
 tracks/0/type = "value"
@@ -13,11 +15,10 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 1.1, 2, 2.9 ),
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( -80, 190 ), Vector2( 300, 190 ), Vector2( 300, 190 ), Vector2( 720, 190 ) ]
+"values": [ Vector2( -90, 190 ), Vector2( 300, 190 ), Vector2( 300, 190 ), Vector2( 720, 190 ) ]
 }
 
-[sub_resource type="Animation" id=1]
-resource_name = "victory"
+[sub_resource type="Animation" id=2]
 length = 3.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("victory:rect_position")
@@ -29,7 +30,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 1, 2, 3 ),
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( -80, 190 ), Vector2( 300, 190 ), Vector2( 300, 190 ), Vector2( 720, 190 ) ]
+"values": [ Vector2( -100, 190 ), Vector2( 290, 190 ), Vector2( 290, 190 ), Vector2( 720, 190 ) ]
 }
 
 [node name="end_state_screen" type="ColorRect"]
@@ -41,22 +42,24 @@ __meta__ = {
 }
 
 [node name="victory" type="Label" parent="."]
-margin_left = -80.0
+margin_left = 720.0
 margin_top = 190.0
-margin_right = -26.0
-margin_bottom = 204.0
+margin_right = 809.0
+margin_bottom = 213.0
+theme = ExtResource( 1 )
 text = "VICTORY"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/defeat = SubResource( 2 )
-anims/victory = SubResource( 1 )
+anims/defeat = SubResource( 1 )
+anims/victory = SubResource( 2 )
 
 [node name="defeat" type="Label" parent="."]
 margin_left = 720.0
 margin_top = 190.0
-margin_right = 767.0
-margin_bottom = 204.0
+margin_right = 802.0
+margin_bottom = 213.0
+theme = ExtResource( 1 )
 text = "DEFEAT"

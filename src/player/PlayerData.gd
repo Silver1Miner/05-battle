@@ -1,7 +1,15 @@
 extends Node
 # Player data
 
+var battle_menu_on := false
 var current_opponent := 0
+var backgrounds := {
+	0: "res://assets/bg/battleback3.png",
+	1: "res://assets/bg/battleback1.png",
+	2: "res://assets/bg/battleback6.png",
+	3: "res://assets/bg/battleback8.png",
+	4: "res://assets/bg/battleback10.png"
+}
 var player_team := [
 {
 	"name": "Red Rocket Man",

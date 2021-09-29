@@ -28,6 +28,7 @@ var current_phase = BATTLE_PHASE.DECISION
 func _ready() -> void:
 	$end_state_screen.visible = false
 	Music.change_track(1)
+	$background.texture = load(PlayerData.backgrounds[PlayerData.current_opponent])
 	_connect_signals()
 	_handle_phase(BATTLE_PHASE.BEGIN)
 
@@ -58,6 +59,7 @@ func _handle_phase(new_phase) -> void:
 			$end_state_screen.visible = true
 			$end_state_screen/AnimationPlayer.play("victory")
 			yield(get_tree().create_timer(3.0), "timeout")
+			PlayerData.battle_menu_on = true
 			if get_tree().change_scene("res://src/menu/Main.tscn") != OK:
 				push_error("fail to return to main menu")
 		BATTLE_PHASE.LOSE:
@@ -65,6 +67,7 @@ func _handle_phase(new_phase) -> void:
 			$end_state_screen.visible = true
 			$end_state_screen/AnimationPlayer.play("defeat")
 			yield(get_tree().create_timer(3.0), "timeout")
+			PlayerData.battle_menu_on = true
 			if get_tree().change_scene("res://src/menu/Main.tscn") != OK:
 				push_error("fail to return to main menu")
 

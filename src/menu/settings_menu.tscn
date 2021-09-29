@@ -1,13 +1,14 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://assets/theme/ui.tres" type="Theme" id=1]
 [ext_resource path="res://src/menu/settings_menu.gd" type="Script" id=2]
+[ext_resource path="res://assets/theme/Main.tres" type="Theme" id=3]
 
 [node name="settings_menu" type="ColorRect"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
-color = Color( 0, 0, 0, 0.784314 )
+color = Color( 0, 0, 0, 0.862745 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -18,10 +19,11 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -30.0
+margin_left = -45.0
 margin_top = -50.0
-margin_right = 30.0
-margin_bottom = -20.0
+margin_right = 45.0
+margin_bottom = -5.0
+theme = ExtResource( 3 )
 text = "Back"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -45,7 +47,6 @@ Battle Ranger - Yanagi Seigen
 Battle Ranger - Battle - Yanagi Seigen
 
 Additional Assets from
-Vav
 opengameart.org
 freesound.org
 kenney.nl

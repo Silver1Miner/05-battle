@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/menu/Main.gd" type="Script" id=1]
 [ext_resource path="res://assets/theme/Main.tres" type="Theme" id=2]
 [ext_resource path="res://assets/main-menu.png" type="Texture" id=3]
 [ext_resource path="res://src/menu/battle_menu.tscn" type="PackedScene" id=4]
 [ext_resource path="res://src/menu/settings_menu.tscn" type="PackedScene" id=5]
+[ext_resource path="res://assets/theme/ui.tres" type="Theme" id=6]
 
 [node name="Main" type="Control"]
 anchor_right = 1.0
@@ -37,27 +38,47 @@ __meta__ = {
 }
 
 [node name="level_select" type="Button" parent="menu_options"]
-margin_right = 120.0
-margin_bottom = 30.0
+margin_right = 197.287
+margin_bottom = 43.5337
 rect_min_size = Vector2( 120, 30 )
 text = "Battle Select"
 
 [node name="settings" type="Button" parent="menu_options"]
-margin_top = 62.0
-margin_right = 120.0
-margin_bottom = 92.0
+margin_top = 75.0
+margin_right = 197.0
+margin_bottom = 118.534
 rect_min_size = Vector2( 120, 30 )
 text = "Settings"
 
 [node name="quit" type="Button" parent="menu_options"]
-margin_top = 124.0
-margin_right = 120.0
-margin_bottom = 154.0
+margin_top = 150.0
+margin_right = 197.0
+margin_bottom = 193.534
 rect_min_size = Vector2( 120, 30 )
 text = "Quit"
 
 [node name="battle_menu" parent="." instance=ExtResource( 4 )]
 visible = false
+
+[node name="battle1" parent="battle_menu/battle_select" index="0"]
+margin_bottom = 43.5337
+
+[node name="battle2" parent="battle_menu/battle_select" index="1"]
+margin_top = 55.0
+margin_bottom = 98.5337
+
+[node name="battle3" parent="battle_menu/battle_select" index="2"]
+margin_top = 110.0
+margin_right = 130.287
+margin_bottom = 153.534
+
+[node name="battle4" parent="battle_menu/battle_select" index="3"]
+margin_top = 165.0
+margin_bottom = 208.534
+
+[node name="battle5" parent="battle_menu/battle_select" index="4"]
+margin_top = 220.0
+margin_bottom = 263.534
 
 [node name="settings_menu" parent="." instance=ExtResource( 5 )]
 visible = false
@@ -66,8 +87,8 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 552.0
-margin_right = -4.0
-margin_bottom = -384.0
+margin_right = -3.0
+margin_bottom = -382.0
 color = Color( 0, 0, 0, 0.803922 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -77,8 +98,9 @@ __meta__ = {
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -86.0
-margin_bottom = 18.0
-text = "v0.1.0 Alpha "
+margin_bottom = 14.0
+theme = ExtResource( 6 )
+text = "v0.2.0 pre-Alpha "
 align = 1
 valign = 1
 __meta__ = {
@@ -90,9 +112,12 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -236.0
-margin_top = -18.0
+margin_left = -183.0
+margin_top = -14.0
+theme = ExtResource( 6 )
 text = "Copyright (c) 2021 Jack Anderson "
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[editable path="battle_menu"]

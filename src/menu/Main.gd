@@ -21,6 +21,8 @@ func _ready() -> void:
 		push_error("back button connect fail")
 	if back2.connect("pressed", self, "_on_back_pressed") != OK:
 		push_error("back button connect fail")
+	if PlayerData.battle_menu_on:
+		battle_menu.visible = true
 
 func _on_level_select_pressed() -> void:
 	settings_menu.visible = false
