@@ -15,6 +15,7 @@ func update_attack_choices(names: Array) -> void:
 	for i in range(3):
 		attack_menu.get_child(i).disabled = false
 		attack_menu.get_child(i).text = names[i]
+		attack_menu.get_child(i).modulate = Database.shades[Database.movedata[names[i]]["type"]]
 
 func update_switch_choices(names: Array, status: Array, current: int) -> void:
 	for i in range(3):

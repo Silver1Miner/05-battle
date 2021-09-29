@@ -9,6 +9,17 @@ onready var remaining_units := 3
 var attack_modifier = 0
 var defense_modifier = 0
 var speed_modifier = 0
+var modifier := {
+	-4: 0.25,
+	-3: 0.375,
+	-2: 0.5,
+	-1: 0.75,
+	0: 1,
+	1: 1.5,
+	2: 2,
+	3: 3.5,
+	4: 4
+}
 
 var units := [
 {
@@ -76,13 +87,13 @@ func get_unit_type() -> String:
 	return units[current_unit]["type"]
 
 func get_unit_attack() -> float:
-	return units[current_unit]["attack"]
+	return units[current_unit]["attack"] * modifier[attack_modifier]
 
 func get_unit_defense() -> float:
-	return units[current_unit]["defense"]
+	return units[current_unit]["defense"] * modifier[defense_modifier]
 
 func get_unit_speed() -> float:
-	return units[current_unit]["speed"]
+	return units[current_unit]["speed"] * modifier[speed_modifier]
 
 func play_intro() -> void:
 	current_active = true
