@@ -8,6 +8,23 @@ onready var enemy_name := $enemy_side/status/display/name
 onready var enemy_status := $enemy_side/status/display/status
 onready var enemy_hp_bar := $enemy_side/status/display/hp_bar
 onready var enemy_hp_values := $enemy_side/status/display/hp_values
+onready var player_avatar = $player_side/panel/TextureRect
+onready var enemy_avatar = $enemy_side/panel/TextureRect
+
+var avatars = {
+	"blu-base": preload("res://assets/avatars/officer-blu-base.png"),
+	"blu-happy": preload("res://assets/avatars/officer-blu-happy.png"),
+	"blu-sad": preload("res://assets/avatars/officer-blu-sad.png"),
+	"red-base": preload("res://assets/avatars/officer-red-base.png"),
+	"red-happy": preload("res://assets/avatars/officer-red-happy.png"),
+	"red-sad": preload("res://assets/avatars/officer-red-sad.png"),
+}
+
+func update_player_avatar(avatar: String) -> void:
+	player_avatar.texture = avatars[avatar]
+
+func update_enemy_avatar(avatar: String) -> void:
+	enemy_avatar.texture = avatars[avatar]
 
 func update_player_all(new_name, new_status, new_values) -> void:
 	update_player_name(new_name)

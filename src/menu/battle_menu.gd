@@ -19,6 +19,12 @@ func _ready() -> void:
 		push_error("battle button connect fail")
 	if battle5.connect("pressed", self, "_on_battle5_pressed") != OK:
 		push_error("battle button connect fail")
+	update_available()
+
+func update_available() -> void:
+	battle2.disabled = (PlayerData.unlocked_battles[1] == 0)
+	battle3.disabled = (PlayerData.unlocked_battles[2] == 0)
+	battle4.disabled = (PlayerData.unlocked_battles[3] == 0)
 
 func _on_battle1_pressed() -> void:
 	PlayerData.current_opponent = 0

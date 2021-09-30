@@ -60,6 +60,8 @@ func _handle_phase(new_phase) -> void:
 			$end_state_screen/AnimationPlayer.play("victory")
 			yield(get_tree().create_timer(3.0), "timeout")
 			PlayerData.battle_menu_on = true
+			PlayerData.unlocked_battles[PlayerData.current_opponent + 1] = 1
+			PlayerData.save_state()
 			if get_tree().change_scene("res://src/menu/Main.tscn") != OK:
 				push_error("fail to return to main menu")
 		BATTLE_PHASE.LOSE:
@@ -75,11 +77,13 @@ func _play_intro_phase() -> void:
 	command.update_switch_choices(team1.get_team_names(), team1.get_team_status(), 0)
 	command.update_attack_choices(team1.get_unit_moves())
 	display.update_player_name(team1.get_unit_name())
+	display.update_player_avatar("red-base")
 	team1.play_intro()
 	yield(team1, "animation_finished")
 	display.update_player_status(team1.get_unit_status())
 	display.update_player_hp(team1.get_unit_hp_values())
 	display.update_enemy_name(team2.get_unit_name())
+	display.update_enemy_avatar("blu-base")
 	team2.play_intro()
 	yield(team2, "animation_finished")
 	display.update_enemy_status(team2.get_unit_status())
@@ -132,8 +136,11 @@ func _on_AI_decision(action, choice) -> void:
 	if player_moved:
 		_handle_phase(BATTLE_PHASE.COMBAT)
 
+var hit = false
 func _execute_combat() -> void:
 	# TODO: implement priority checks and AI side
+	display.update_player_avatar("red-base")
+	display.update_enemy_avatar("blu-base")
 	command.set_switch_only(false)
 	if player_choice[0] == 2: # switch
 		if player_choice[1] != team1.current_unit and team1.units[player_choice[1]]["status"] != "Fainted":
@@ -155,19 +162,39 @@ func _execute_combat() -> void:
 			var name_2 = team2.get_unit_moves()[AI_choice[1]]
 			_enemy_attack_damage_calculation(name_2)
 			yield(get_tree().create_timer(1.0), "timeout")
+			if hit:
+					match battle_calculator.calculate_type(Database.movedata[name_2]["type"],team1.get_unit_type()):
+						0.5:
+							command.update_enemy_text_feed("It's not very effective...")
+							yield(get_tree().create_timer(1.5), "timeout")
+						2.0:
+							command.update_enemy_text_feed("It's very effective!")
+							yield(get_tree().create_timer(1.5), "timeout")
+			hit = false
 			if !team1.current_active:
+				display.update_player_avatar("red-sad")
+				display.update_enemy_avatar("blu-happy")
 				command.update_player_text_feed(team1.get_unit_name() + " was defeated!")
 				_handle_phase(BATTLE_PHASE.REINFORCE)
 				return
 	elif player_choice[0] == 1: # attack
-		if team1.get_unit_speed() >= team2.get_unit_speed():
+		if team1.get_unit_speed() > team2.get_unit_speed():
 			command.update_player_text_feed(team1.get_unit_name() + " used " + team1.get_unit_moves()[player_choice[1]] + "!")
 			team1.attack(player_choice[1])
 			sounds.match_sound(player_choice[1])
 			yield(team1, "animation_finished")
-			var name_move = team1.get_unit_moves()[player_choice[1]]
-			_player_attack_damage_calculation(name_move)
+			var player_name_move_1 = team1.get_unit_moves()[player_choice[1]]
+			_player_attack_damage_calculation(player_name_move_1)
 			yield(get_tree().create_timer(1.5), "timeout")
+			if hit:
+				match battle_calculator.calculate_type(Database.movedata[player_name_move_1]["type"],team2.get_unit_type()):
+						0.5:
+							command.update_enemy_text_feed("It's not very effective...")
+							yield(get_tree().create_timer(1.5), "timeout")
+						2.0:
+							command.update_enemy_text_feed("It's very effective!")
+							yield(get_tree().create_timer(1.5), "timeout")
+			hit = false
 			if team2.current_active:
 				team2.attack(AI_choice[1])
 				sounds.match_sound(AI_choice[1])
@@ -176,11 +203,24 @@ func _execute_combat() -> void:
 				var enemy_name_move = team2.get_unit_moves()[AI_choice[1]]
 				_enemy_attack_damage_calculation(enemy_name_move)
 				yield(get_tree().create_timer(1.5), "timeout")
+				if hit:
+					match battle_calculator.calculate_type(Database.movedata[enemy_name_move]["type"],team1.get_unit_type()):
+						0.5:
+							command.update_enemy_text_feed("It's not very effective...")
+							yield(get_tree().create_timer(1.5), "timeout")
+						2.0:
+							command.update_enemy_text_feed("It's very effective!")
+							yield(get_tree().create_timer(1.5), "timeout")
+				hit = false
 				if !team1.current_active:
+					display.update_player_avatar("red-sad")
+					display.update_enemy_avatar("blu-happy")
 					command.update_player_text_feed(team1.get_unit_name() + " was defeated!")
 					_handle_phase(BATTLE_PHASE.REINFORCE)
 					return
 			else:
+				display.update_player_avatar("red-happy")
+				display.update_enemy_avatar("blu-sad")
 				command.update_enemy_text_feed(team2.get_unit_name() + " was defeated!")
 				yield(get_tree().create_timer(1.5), "timeout")
 				_handle_phase(BATTLE_PHASE.REINFORCE)
@@ -190,22 +230,44 @@ func _execute_combat() -> void:
 			team2.attack(AI_choice[1])
 			sounds.match_sound(AI_choice[1])
 			yield(team2, "animation_finished")
-			var name_move = team2.get_unit_moves()[AI_choice[1]]
-			_enemy_attack_damage_calculation(name_move)
+			var name_move_3 = team2.get_unit_moves()[AI_choice[1]]
+			_enemy_attack_damage_calculation(name_move_3)
 			yield(get_tree().create_timer(1.5), "timeout")
+			if hit:
+				match battle_calculator.calculate_type(Database.movedata[name_move_3]["type"],team1.get_unit_type()):
+						0.5:
+							command.update_player_text_feed("It's not very effective...")
+							yield(get_tree().create_timer(1.5), "timeout")
+						2.0:
+							command.update_player_text_feed("It's very effective!")
+							yield(get_tree().create_timer(1.5), "timeout")
+			hit = false
 			if team1.current_active:
 				team1.attack(player_choice[1])
 				sounds.match_sound(player_choice[1])
 				command.update_player_text_feed(team1.get_unit_name() + " used " + team1.get_unit_moves()[player_choice[1]] + "!")
 				yield(team1, "animation_finished")
-				var player_name_move = team2.get_unit_moves()[AI_choice[1]]
+				var player_name_move = team1.get_unit_moves()[player_choice[1]]
 				_player_attack_damage_calculation(player_name_move)
 				yield(get_tree().create_timer(1.5), "timeout")
+				if hit:
+					match battle_calculator.calculate_type(Database.movedata[player_name_move]["type"],team2.get_unit_type()):
+						0.5:
+							command.update_enemy_text_feed("It's not very effective...")
+							yield(get_tree().create_timer(1.5), "timeout")
+						2.0:
+							command.update_enemy_text_feed("It's very effective!")
+							yield(get_tree().create_timer(1.5), "timeout")
+				hit = false
 				if !team2.current_active:
+					display.update_player_avatar("red-happy")
+					display.update_enemy_avatar("blu-sad")
 					command.update_player_text_feed(team2.get_unit_name() + " was defeated!")
 					_handle_phase(BATTLE_PHASE.REINFORCE)
 					return
 			else:
+				display.update_player_avatar("red-sad")
+				display.update_enemy_avatar("blu-happy")
 				command.update_enemy_text_feed(team1.get_unit_name() + " was defeated!")
 				yield(get_tree().create_timer(1.5), "timeout")
 				_handle_phase(BATTLE_PHASE.REINFORCE)
@@ -239,6 +301,7 @@ func _player_attack_damage_calculation(name_move) -> void:
 			team2.take_damage(battle_damage)
 			command.update_enemy_text_feed(team2.get_unit_name() + " took " + str(round(battle_damage)) + " damage!")
 			sounds.match_sound(3)
+			hit = true
 	else:
 		command.update_enemy_text_feed("The attack missed!")
 	#print("team 2 has ", team2.get_unit_hp_values(), " hp")
@@ -271,6 +334,7 @@ func _enemy_attack_damage_calculation(name_move) -> void:
 			team1.take_damage(battle_damage)
 			command.update_player_text_feed(team1.get_unit_name() + " took " + str(round(battle_damage)) + " damage!")
 			sounds.match_sound(3)
+			hit = true
 	else:
 		command.update_enemy_text_feed("The attack missed!")
 	display.update_player_all(

@@ -26,6 +26,7 @@ func _ready() -> void:
 
 func _on_level_select_pressed() -> void:
 	settings_menu.visible = false
+	battle_menu.update_available()
 	battle_menu.visible = true
 
 func _on_settings_pressed() -> void:

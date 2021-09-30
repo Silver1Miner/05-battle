@@ -1,6 +1,7 @@
 extends Node
 # Player data
 
+var unlocked_battles := [1, 0, 0, 0]
 var battle_menu_on := false
 var current_opponent := 0
 var backgrounds := {
@@ -11,42 +12,27 @@ var backgrounds := {
 	4: "res://assets/bg/battleback10.png"
 }
 var player_team := [
-{
-	"name": "Red Rocket Man",
-	"skin": "res://assets/battlers/antitank/antitank-red-Sheet.png",
-	"status": "OK",
-	"type": "red",
-	"hp": 24,
-	"max_hp": 24,
-	"attack": 10,
-	"defense": 10,
-	"speed": 10,
-	"moves": ["Flame Cannon", "Pepper Spray", "Flare Speed"],
-	"pp": [10, 10, 10]
-},
-{
-	"name": "Blu Tankie",
-	"skin": "res://assets/battlers/tank/tank-blu-Sheet.png",
-	"status": "OK",
-	"type": "blu",
-	"hp": 30,
-	"max_hp": 30,
-	"attack": 10,
-	"defense": 10,
-	"speed": 10,
-	"moves": ["Hydro Blast", "Gun Harass", "Pump Up"],
-	"pp": [10, 10, 10]
-}
-,{
-	"name": "Ylw Cannon",
-	"skin": "res://assets/battlers/artillery/artillery-ylw-Sheet.png",
-	"status": "OK",
-	"type": "ylw",
-	"hp": 20,
-	"max_hp": 20,
-	"attack": 10,
-	"defense": 10,
-	"speed": 10,
-	"moves": ["Mud Blast", "Grape Shot", "Angle Aim"],
-	"pp": [10, 10, 10]
-}]
+{},
+{}
+,{}]
+
+func _ready():
+	load_state()
+
+func reset() -> void:
+	unlocked_battles = [1, 0, 0, 0]
+	save_state()
+
+func load_state() -> void:
+	var save_game = File.new()
+	if not save_game.file_exists("user://battleranger.save"):
+		return # Error! We don't have a save to load.
+	save_game.open("user://battleranger.save", File.READ)
+	unlocked_battles = parse_json(save_game.get_line())
+	save_game.close()
+
+func save_state() -> void:
+	var save_game = File.new()
+	save_game.open("user://battleranger.save", File.WRITE)
+	save_game.store_line(to_json(unlocked_battles))
+	save_game.close()
