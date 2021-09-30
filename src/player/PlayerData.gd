@@ -1,7 +1,7 @@
 extends Node
 # Player data
 
-var unlocked_battles := [1, 0, 0, 0]
+var unlocked_battles := [1, 0, 0, 0, 0]
 var battle_menu_on := false
 var current_opponent := 0
 var backgrounds := {
@@ -20,7 +20,7 @@ func _ready():
 	load_state()
 
 func reset() -> void:
-	unlocked_battles = [1, 0, 0, 0]
+	unlocked_battles = [1, 0, 0, 0, 0]
 	save_state()
 
 func load_state() -> void:

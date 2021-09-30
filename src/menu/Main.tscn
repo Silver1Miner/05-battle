@@ -86,10 +86,10 @@ visible = false
 [node name="version" type="Label" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -86.0
+margin_left = -68.0
 margin_bottom = 14.0
 theme = ExtResource( 6 )
-text = "v0.2.0 pre-Alpha "
+text = "v0.3.0 Demo "
 align = 1
 valign = 1
 __meta__ = {

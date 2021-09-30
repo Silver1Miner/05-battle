@@ -60,7 +60,8 @@ func _handle_phase(new_phase) -> void:
 			$end_state_screen/AnimationPlayer.play("victory")
 			yield(get_tree().create_timer(3.0), "timeout")
 			PlayerData.battle_menu_on = true
-			PlayerData.unlocked_battles[PlayerData.current_opponent + 1] = 1
+			if PlayerData.current_opponent < 3:
+				PlayerData.unlocked_battles[PlayerData.current_opponent + 1] = 1
 			PlayerData.save_state()
 			if get_tree().change_scene("res://src/menu/Main.tscn") != OK:
 				push_error("fail to return to main menu")
